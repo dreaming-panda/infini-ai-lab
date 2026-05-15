@@ -87,7 +87,6 @@
     border-radius: 50%; color: var(--ink-soft);
     transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
   }
-  .nav-links .icon-link::after { content: none !important; }
   .nav-links .icon-link:hover {
     background: var(--accent-soft); color: var(--accent-2);
     transform: translateY(-1px);
@@ -99,11 +98,81 @@
     width: 1px; height: 18px; background: var(--line);
   }
 
+  .nav-toggle {
+    display: none;
+    align-items: center; justify-content: center;
+    background: transparent; border: none;
+    width: 40px; height: 40px;
+    border-radius: 50%; cursor: pointer;
+    color: var(--ink-soft);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .nav-toggle:hover { background: var(--accent-soft); color: var(--accent-2); }
+  .nav-toggle .bars { transition: transform 0.25s ease, opacity 0.2s ease; transform-origin: center; }
+  .nav-toggle[aria-expanded="true"] .bar1 { transform: translateY(5px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .bar2 { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .bar3 { transform: translateY(-5px) rotate(-45deg); }
+
   @media (max-width: 720px) {
-    .nav-links { gap: 2px; }
-    .nav-links a:not(.icon-link):not(.active) { display: none; }
-    .nav-links .icon-link:first-of-type { margin-left: 4px; }
-    .nav-links .icon-link:first-of-type::before { display: none; }
+    .nav-toggle { display: inline-flex; }
+
+    .nav-links {
+      position: absolute;
+      top: 72px; left: 0; right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 0 24px;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 14px 30px -22px rgba(0,0,0,0.18);
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
+    }
+    .nav-links.open {
+      max-height: 640px;
+      opacity: 1;
+      padding: 12px 24px 18px;
+    }
+    .nav-links a:not(.icon-link) {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 10px;
+    }
+    .nav-links a:not(.icon-link)::after { display: none; }
+    .nav-links a:not(.icon-link):hover { background: var(--bg-soft); }
+    .nav-links a.active { background: var(--accent-soft); }
+
+    .nav-links .icon-link {
+      width: auto; height: auto;
+      justify-content: flex-start;
+      border-radius: 10px;
+      background: transparent;
+      margin-left: 0;
+      padding: 12px 14px;
+      gap: 12px;
+    }
+    .nav-links .icon-link::before { display: none; }
+    .nav-links .icon-link::after {
+      content: attr(aria-label);
+      color: var(--ink-soft);
+      font-size: 14.5px;
+      font-weight: 500;
+    }
+    .nav-links .icon-link:first-of-type {
+      margin-top: 6px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+    .nav-links .icon-link:hover {
+      background: var(--bg-soft);
+      color: var(--accent-2);
+      transform: none;
+    }
   }
 
   /* page header */
@@ -292,7 +361,14 @@
       <img src="infini-ai.png" alt="InfiniAI Lab logo" />
       <span>InfiniAI Lab</span>
     </a>
-    <nav class="nav-links">
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <line class="bars bar1" x1="4" y1="7"  x2="20" y2="7"/>
+        <line class="bars bar2" x1="4" y1="12" x2="20" y2="12"/>
+        <line class="bars bar3" x1="4" y1="17" x2="20" y2="17"/>
+      </svg>
+    </button>
+    <nav class="nav-links" id="primary-nav">
       <a href="index.html#about">About</a>
       <a href="index.html#research">Research</a>
       <a href="team.html" class="active">Team</a>
@@ -408,6 +484,20 @@
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
+
+(function () {
+  const toggle = document.querySelector('.nav-toggle');
+  const menu = document.querySelector('.nav-links');
+  if (!toggle || !menu) return;
+  toggle.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }));
+})();
 
 const ALUMNI = [
   { name: "Harry Dong",       role: "PhD",       next: "Microsoft Research" },
