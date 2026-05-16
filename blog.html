@@ -379,6 +379,14 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 const POSTS = [
   {
+    title: "MonarchRT: Efficient Attention for Real-Time Video Generation",
+    description: "We introduce MonarchRT, a method that sparsely parameterizes attention maps in video generation DiTs as Monarch matrices. Specifically, it addresses three key limitations of existing work on Monarch-style attention to make it feasible for video: (1) video dimension block alignment, (2) monotonic refinement with compute via tiled Monarch parameterization, and (3) linear iterative refinement overhead, mitigated by 1-iteration + finetuning and custom Triton kernels. Empirically, MonarchRT reaches up to 95% effective attention sparsity with no quality loss and achieves speedups over FlashAttention(-2, -3, -4) kernels in the range of 1.4–11.8×. Notably, this enables, for the first time, true real-time 16 FPS video generation with Self-Forcing on a single RTX 5090.",
+    authors: "Krish Agarwal, Zhuoming Chen, Cheng Luo, Yongqi Chen, Haizhong Zheng, Xun Huang, Atri Rudra, Beidi Chen",
+    paper: "https://arxiv.org/abs/2602.12271",
+    paperLabel: "arXiv",
+    blog: "https://infini-ai-lab.github.io/MonarchRT/"
+  },
+  {
     title: "Vortex: Democratizing Sparse Attention",
     description: "Vortex is a lightweight, modular framework for building custom sparse attention algorithms for LLM inference. It exists to make it easy for researchers and engineers to prototype, extend, and deploy advanced sparsity patterns on modern inference backends such as SGLang—without modifying core model code. Vortex allows you to express novel sparse attention concisely while relying on an optimized execution engine.",
     authors: "",
